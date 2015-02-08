@@ -17,11 +17,9 @@ class MoviesViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.rowHeight = 320
-        
         // How can I avoid exposing this in plain text?
         let apiKey = "fxd69xpcudd6jcv87bfhyfyd"
-        let rottenTomatoesUrl = NSURL(string: "http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/top_rentals.json?apikey=" + apiKey)!
+        let rottenTomatoesUrl = NSURL(string: "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?apikey=" + apiKey)!
         let request = NSURLRequest(URL: rottenTomatoesUrl)
     
         
@@ -42,12 +40,22 @@ class MoviesViewController: UIViewController, UITableViewDataSource {
         
         // Retrieve all relevant fields that will displayed
         let movie = self.movies[indexPath.row]
-        
         let posters = movie["posters"] as NSDictionary
         let posterThumbnail = posters["thumbnail"] as NSString
+        let title = movie["title"] as NSString
+        let year = movie["year"] as Int
+        let runtime = movie["runtime"] as Int
+        let mpaaRating = movie["mpaa_rating"] as NSString
+        let ratings = movie["ratings"] as NSDictionary
+        let criticRating = ratings["critics_score"] as Int
+        let synopsis = movie["synopsis"] as NSString
         
         // Update cell contents
         cell.moviePosterThumbnail.setImageWithURL(NSURL(string: posterThumbnail))
+        
+        cell.titleLabel.text = title
+        cell.synopsisLabel.text = synopsis
+        cell.mpaaRatingLabel.text = "(" + mpaaRating + ")"
         
         return cell
     }
