@@ -13,44 +13,36 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var networkErrorLabel: UILabel!
     
+    var refreshControl: UIRefreshControl!
     var movies: [NSDictionary] = []
+    var rottenTomatoesUrl: NSURL = NSURL()
+    
+    // How can I avoid exposing this in plain text?
+    let apiKey = "fxd69xpcudd6jcv87bfhyfyd"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // The progress indicator is displayed until the network request is completed
         SVProgressHUD.show()
         
-        // How can I avoid exposing this in plain text?
-        let apiKey = "fxd69xpcudd6jcv87bfhyfyd"
-        let rottenTomatoesUrl = NSURL(string: "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?apikey=" + apiKey)!
-        let request = NSURLRequest(URL: rottenTomatoesUrl)
-    
+        // Enable pull-to-refresh functionality
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
         
-        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue()) {
-            (response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
-            
-            if (error != nil) {
-                // Show network error label
-                self.networkErrorLabel.hidden = false
-            } else {
-                // Hide network error label
-                self.networkErrorLabel.hidden = true
-                
-                let responseDictionary = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as NSDictionary
-                self.movies = responseDictionary["movies"] as [NSDictionary]
-                self.tableView.reloadData()
-            }
-            
-            SVProgressHUD.dismiss()
-        }
+        // Build and make the request to the RottenTomatoes API
+        self.rottenTomatoesUrl = NSURL(string: "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?apikey=" + apiKey)!
+        
+        fetchMovies(rottenTomatoesUrl)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        var vc = segue.destinationViewController as MovieDetailsViewController
+        var viewController = segue.destinationViewController as MovieDetailsViewController
         var indexPath = tableView.indexPathForCell(sender as UITableViewCell)
         
         let movieDict = self.movies[indexPath!.row]
-        vc.movie = Movie(fromDict: movieDict)
+        viewController.movie = Movie(fromDict: movieDict)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -76,6 +68,33 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
+    func fetchMovies(url: NSURL) {
+        let request = NSURLRequest(URL: url)
+    
+        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue()) {
+            (response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
+    
+            if (error != nil) {
+                // Show network error label
+                self.networkErrorLabel.hidden = false
+            } else {
+                // Hide network error label
+                self.networkErrorLabel.hidden = true
+    
+                let responseDictionary = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as NSDictionary
+                self.movies = responseDictionary["movies"] as [NSDictionary]
+                self.tableView.reloadData()
+            }
+    
+            self.refreshControl.endRefreshing()
+            SVProgressHUD.dismiss()
+        }
+    }
+    
+    func onRefresh() {
+        fetchMovies(self.rottenTomatoesUrl)
     }
 }
 
