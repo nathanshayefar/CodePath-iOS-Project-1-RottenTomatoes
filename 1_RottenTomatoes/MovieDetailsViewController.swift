@@ -29,9 +29,14 @@ class MovieDetailsViewController: UIViewController {
         navigationController?.navigationBar.tintColor = UIColor.grayColor()
         navigationController?.navigationBar.backgroundColor = UIColor.grayColor()
         
-        let largePosterUrlString = movie.posterUrlString.stringByReplacingOccurrencesOfString("tmb", withString: "ori")
+        // Create a placeholder image using the low-fi version of the movie poster
+        var placeholderImageView: UIImageView = UIImageView()
+        placeholderImageView.setImageWithURL(NSURL(string: movie.posterUrlString))
         
-        largePosterView.setImageWithURL(NSURL(string: largePosterUrlString))
+        // Load the higher fidelity version, using the previous poster as a placeholder
+        // Note: This might have to go in a completion block of the previous call
+        let largePosterUrlString = movie.posterUrlString.stringByReplacingOccurrencesOfString("tmb", withString: "ori")
+        largePosterView.setImageWithURL(NSURL(string: largePosterUrlString), placeholderImage: placeholderImageView.image)
         
         titleLabel.text = "\(movie.title) (\(movie.year))"
         ratingsLabel.text = "Critics Score: \(movie.criticRating), Audience Score \(movie.audienceRating)"
