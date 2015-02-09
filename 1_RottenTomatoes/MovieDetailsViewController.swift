@@ -22,6 +22,13 @@ class MovieDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Navigation bar styling
+        self.navigationItem.title = movie.title
+        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.blackColor()]
+        navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        navigationController?.navigationBar.tintColor = UIColor.grayColor()
+        navigationController?.navigationBar.backgroundColor = UIColor.grayColor()
+        
         let largePosterUrlString = movie.posterUrlString.stringByReplacingOccurrencesOfString("tmb", withString: "ori")
         
         largePosterView.setImageWithURL(NSURL(string: largePosterUrlString))

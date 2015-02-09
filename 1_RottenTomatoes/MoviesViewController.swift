@@ -23,12 +23,20 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Navigation bar styling
+        self.navigationItem.title = "Top Movies"
+        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.blackColor()]
+        navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        navigationController?.navigationBar.tintColor = UIColor.grayColor()
+        navigationController?.navigationBar.backgroundColor = UIColor.grayColor()
+        
         // The progress indicator is displayed until the network request is completed
         SVProgressHUD.show()
         
         // Enable pull-to-refresh functionality
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        // For some reason, this view is not being centered horizontally. I think it may have to do with my failure to disable autolayout early on, but I haven't been able to fix it yet.
         tableView.insertSubview(refreshControl, atIndex: 0)
         
         // Build and make the request to the RottenTomatoes API
