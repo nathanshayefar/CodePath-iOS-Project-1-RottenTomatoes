@@ -11,11 +11,14 @@ import Foundation
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var networkErrorLabel: UILabel!
     
     var movies: [NSDictionary] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        SVProgressHUD.show()
         
         // How can I avoid exposing this in plain text?
         let apiKey = "fxd69xpcudd6jcv87bfhyfyd"
@@ -25,9 +28,20 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue()) {
             (response: NSURLResponse!, data: NSData!, error: NSError!) -> Void in
+            
+            if (error != nil) {
+                // Show network error label
+                self.networkErrorLabel.hidden = false
+            } else {
+                // Hide network error label
+                self.networkErrorLabel.hidden = true
+                
                 let responseDictionary = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as NSDictionary
                 self.movies = responseDictionary["movies"] as [NSDictionary]
                 self.tableView.reloadData()
+            }
+            
+            SVProgressHUD.dismiss()
         }
     }
     
