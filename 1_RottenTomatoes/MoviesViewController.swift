@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-class MoviesViewController: UIViewController, UITableViewDataSource {
+class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     
     var movies: [NSDictionary] = []
@@ -31,6 +31,14 @@ class MoviesViewController: UIViewController, UITableViewDataSource {
         }
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        var vc = segue.destinationViewController as MovieDetailsViewController
+        var indexPath = tableView.indexPathForCell(sender as UITableViewCell)
+        
+        let movieDict = self.movies[indexPath!.row]
+        vc.movie = Movie(fromDict: movieDict)
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.movies.count
     }
@@ -39,25 +47,21 @@ class MoviesViewController: UIViewController, UITableViewDataSource {
         let cell = tableView.dequeueReusableCellWithIdentifier("MoviesTableViewCellID") as MoviesTableViewCell
         
         // Retrieve all relevant fields that will displayed
-        let movie = self.movies[indexPath.row]
-        let posters = movie["posters"] as NSDictionary
-        let posterThumbnail = posters["thumbnail"] as NSString
-        let title = movie["title"] as NSString
-        let year = movie["year"] as Int
-        let runtime = movie["runtime"] as Int
-        let mpaaRating = movie["mpaa_rating"] as NSString
-        let ratings = movie["ratings"] as NSDictionary
-        let criticRating = ratings["critics_score"] as Int
-        let synopsis = movie["synopsis"] as NSString
+        let movieDict = self.movies[indexPath.row]
+        let movie = Movie(fromDict: movieDict)
         
         // Update cell contents
-        cell.moviePosterThumbnail.setImageWithURL(NSURL(string: posterThumbnail))
+        cell.moviePosterThumbnail.setImageWithURL(NSURL(string: movie.posterUrlString))
         
-        cell.titleLabel.text = title
-        cell.synopsisLabel.text = synopsis
-        cell.mpaaRatingLabel.text = "(" + mpaaRating + ")"
+        cell.titleLabel.text = movie.title
+        cell.synopsisLabel.text = movie.synopsis
+        cell.mpaaRatingLabel.text = "(" + movie.mpaaRating + ")"
         
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
 }
 

@@ -18,7 +18,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MoviesTableViewCellID" rowHeight="150" id="S2d-6N-s5p" customClass="MoviesTableViewCell" customModule="__RottenTomatoes" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="MoviesTableViewCellID" rowHeight="150" id="S2d-6N-s5p" customClass="MoviesTableViewCell" customModule="__RottenTomatoes" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="S2d-6N-s5p" id="xUN-fL-yAc">
@@ -65,11 +65,13 @@
                                             <outlet property="mpaaRatingLabel" destination="M5w-IP-xEh" id="vBt-Gl-PzT"/>
                                             <outlet property="synopsisLabel" destination="vXb-tM-jXA" id="g0H-8E-Vdm"/>
                                             <outlet property="titleLabel" destination="Sef-Kr-5Kt" id="WYP-PO-Izz"/>
+                                            <segue destination="OmC-Kq-nvI" kind="push" id="rg2-ld-g5p"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="BYZ-38-t0r" id="ogs-cb-Xug"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="aN9-3i-Odt"/>
                                 </connections>
                             </tableView>
                         </subviews>
@@ -82,7 +84,72 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1030" y="279"/>
+            <point key="canvasLocation" x="1005" y="279"/>
+        </scene>
+        <!--Movie Details View Controller-->
+        <scene sceneID="Ahg-78-PAz">
+            <objects>
+                <viewController id="OmC-Kq-nvI" customClass="MovieDetailsViewController" customModule="__RottenTomatoes" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Jgp-Pk-Ta3">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="GIE-8D-MCw">
+                                <rect key="frame" x="0.0" y="66" width="320" height="502"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </imageView>
+                            <view alpha="0.69999999999999996" contentMode="scaleToFill" id="CjZ-bj-o7C">
+                                <rect key="frame" x="0.0" y="319" width="320" height="249"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title (Year)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="jiZ-1b-ZfN">
+                                        <rect key="frame" x="8" y="0.0" width="298" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Critics Score" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5Zj-z5-YFG">
+                                        <rect key="frame" x="8" y="23" width="312" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MPAA Rating" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="XPj-kg-0P0">
+                                        <rect key="frame" x="8" y="39" width="304" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Synopsis" lineBreakMode="tailTruncation" numberOfLines="21" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Vsc-x0-jPZ">
+                                        <rect key="frame" x="8" y="68" width="304" height="181"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="wbQ-CZ-XN3"/>
+                    <connections>
+                        <outlet property="largePosterView" destination="GIE-8D-MCw" id="Zl6-QJ-YaR"/>
+                        <outlet property="mpaaRatingsLabel" destination="XPj-kg-0P0" id="Nhc-fB-N1h"/>
+                        <outlet property="ratingsLabel" destination="5Zj-z5-YFG" id="bE5-V9-I8b"/>
+                        <outlet property="summaryView" destination="CjZ-bj-o7C" id="Oam-7K-70t"/>
+                        <outlet property="synopsisLabel" destination="Vsc-x0-jPZ" id="eIR-aU-wDU"/>
+                        <outlet property="titleLabel" destination="jiZ-1b-ZfN" id="MIJ-eh-h4f"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KGs-CK-4Xt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1450" y="279"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="WoL-X7-VqV">
@@ -100,7 +167,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wf5-16-Knp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="533.33333333333337" y="269.80000000000001"/>
+            <point key="canvasLocation" x="560" y="279"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
