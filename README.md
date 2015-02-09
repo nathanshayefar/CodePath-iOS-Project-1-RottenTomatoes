@@ -18,6 +18,7 @@ Completed user stories:
 
 Walkthrough of all user stories:
 
-![Video Walkthrough](anim_rotten_tomatoes.gif)
+![Video Walkthrough 1](anim_rotten_tomatoes1.gif)
+![Video Walkthrough 2](anim_rotten_tomatoes2.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
