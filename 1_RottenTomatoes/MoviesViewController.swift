@@ -9,13 +9,14 @@
 import UIKit
 import Foundation
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var networkErrorLabel: UILabel!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var refreshControl: UIRefreshControl!
     var movies: [NSDictionary] = []
-    var rottenTomatoesUrl: NSURL = NSURL()
+    var rottenTomatoesUrlString: String = ""
     
     // How can I avoid exposing this in plain text?
     let apiKey = "fxd69xpcudd6jcv87bfhyfyd"
@@ -40,9 +41,9 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.insertSubview(refreshControl, atIndex: 0)
         
         // Build and make the request to the RottenTomatoes API
-        self.rottenTomatoesUrl = NSURL(string: "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?apikey=" + apiKey)!
+        self.rottenTomatoesUrlString = "http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?apikey=" + apiKey
         
-        fetchMovies(rottenTomatoesUrl)
+        fetchMovies(rottenTomatoesUrlString)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -78,7 +79,25 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
-    func fetchMovies(url: NSURL) {
+    // Choosing not to use textDidChange to respect API rate limits
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        fetchMovies(self.rottenTomatoesUrlString)
+        self.view.endEditing(true)
+    }
+    
+    func fetchMovies(urlString: String) {
+        var requestUrlString = urlString
+        
+        // If text has been entered into the search bar, use it to modify the query string
+        let searchBarText = self.searchBar.text
+        if (!searchBarText.isEmpty) {
+            var escapedSearchBarText = searchBarText.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())! as String
+            requestUrlString += "?q=\(escapedSearchBarText)"
+        }
+        
+        println(requestUrlString)
+        
+        let url = NSURL(string: requestUrlString)!
         let request = NSURLRequest(URL: url)
     
         NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue()) {
@@ -92,7 +111,13 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 self.networkErrorLabel.hidden = true
     
                 let responseDictionary = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as NSDictionary
-                self.movies = responseDictionary["movies"] as [NSDictionary]
+                
+                if (responseDictionary["movies"] == nil) {
+                    self.movies = []
+                } else {
+                    self.movies = responseDictionary["movies"] as [NSDictionary]
+                }
+                
                 self.tableView.reloadData()
             }
     
@@ -102,7 +127,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func onRefresh() {
-        fetchMovies(self.rottenTomatoesUrl)
+        fetchMovies(self.rottenTomatoesUrlString)
     }
 }
 

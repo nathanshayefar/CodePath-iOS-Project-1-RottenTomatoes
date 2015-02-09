@@ -85,6 +85,9 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <textInputTraits key="textInputTraits" keyboardAppearance="alert"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="IYm-WT-o4k"/>
+                                </connections>
                             </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -93,6 +96,7 @@
                     <navigationItem key="navigationItem" id="VbF-wJ-FiB"/>
                     <connections>
                         <outlet property="networkErrorLabel" destination="0uV-WX-sEh" id="xSk-R5-2nb"/>
+                        <outlet property="searchBar" destination="78O-KU-kt3" id="RNK-qZ-XUm"/>
                         <outlet property="tableView" destination="q2U-2f-o3S" id="bI8-FH-u42"/>
                     </connections>
                 </viewController>
