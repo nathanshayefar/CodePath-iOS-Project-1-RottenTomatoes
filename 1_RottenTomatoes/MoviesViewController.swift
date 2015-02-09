@@ -37,7 +37,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         // Enable pull-to-refresh functionality
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
-        // For some reason, this view is not being centered horizontally. I think it may have to do with my failure to disable autolayout early on, but I haven't been able to fix it yet.
+        // For some reason, this view is completely hidden now. It still behaves as intended
         tableView.insertSubview(refreshControl, atIndex: 0)
         
         // Build and make the request to the RottenTomatoes API
@@ -81,7 +81,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     // Choosing not to use textDidChange to respect API rate limits
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        fetchMovies(self.rottenTomatoesUrlString)
+        fetchMovies("http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey=" + apiKey)
         self.view.endEditing(true)
     }
     
@@ -92,7 +92,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let searchBarText = self.searchBar.text
         if (!searchBarText.isEmpty) {
             var escapedSearchBarText = searchBarText.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())! as String
-            requestUrlString += "?q=\(escapedSearchBarText)"
+            requestUrlString += "&q=\(escapedSearchBarText)&page_limit=10"
         }
         
         println(requestUrlString)
@@ -117,6 +117,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 } else {
                     self.movies = responseDictionary["movies"] as [NSDictionary]
                 }
+                
+                println(self.movies)
                 
                 self.tableView.reloadData()
             }
